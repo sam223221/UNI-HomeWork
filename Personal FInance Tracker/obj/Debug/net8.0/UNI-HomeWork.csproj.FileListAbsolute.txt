@@ -1,0 +1,15 @@
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\bin\Debug\net8.0\UNI-HomeWork.exe
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\bin\Debug\net8.0\UNI-HomeWork.deps.json
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\bin\Debug\net8.0\UNI-HomeWork.runtimeconfig.json
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\bin\Debug\net8.0\UNI-HomeWork.dll
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\bin\Debug\net8.0\UNI-HomeWork.pdb
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\UNI-HomeWork.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\UNI-HomeWork.AssemblyInfoInputs.cache
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\UNI-HomeWork.AssemblyInfo.cs
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\UNI-HomeWork.csproj.CoreCompileInputs.cache
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\UNI-HomeWork.sourcelink.json
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\UNI-HomeWork.dll
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\refint\UNI-HomeWork.dll
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\UNI-HomeWork.pdb
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\UNI-HomeWork.genruntimeconfig.cache
+C:\Users\samgl\Documents\GitHub\UNI-HomeWork\Personal FInance Tracker\obj\Debug\net8.0\ref\UNI-HomeWork.dll
