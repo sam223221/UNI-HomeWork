@@ -1,21 +1,36 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PersonalFinanceTracker
 {
-    class CreateAccount
+        public class CreateAccount
     {
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public int Balance { get; private set; }
-        public int Id { get; private set; }
+        public string FirstName { get; internal set; }
+        public string LastName { get; internal set; }
+        public string Password { get; internal set; }
+        public int Balance { get; internal set; }
+        public int Id { get; internal set; }
 
-        public CreateAccount(string firstName, string lastName, int deposit)
+
+        [JsonConstructor]
+        public CreateAccount(string firstName, string lastName, int balance,string password, int id)
         {
             FirstName = firstName;
             LastName = lastName;
+            Balance = balance;
+            Password = password;
+            Id = id;
+        }
+
+        // Constructor with parameters for manual object creation
+        public CreateAccount(string firstName, string lastName,string password, int deposit)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Password = password;
             Balance = deposit;
             Id = IdGenerator();
             Console.WriteLine($"Your ID is {Id}");
@@ -43,60 +58,25 @@ namespace PersonalFinanceTracker
         }
     }
 
+
     class AccountDB
     {
-        public List<CreateAccount> accounts = new List<CreateAccount>();
+        private const string Filepath = "transaction.json";
+        public List<CreateAccount> Accounts { get; } = new List<CreateAccount>();
 
         public void AddAccount(CreateAccount account)
         {
-            accounts.Add(account);
-        }
-        
-    }
-
-    class Program
-    {
-        AccountDB accountDB = new();
-        private const string Filepath = "transaction.json";
-
-        public static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, welcome to the Personal Finance Tracker.");
-            Console.WriteLine("In this program, you can track your income and expenses.");
-
-            CreateAccount account = new("John", "Doe", 20);
-            CreateAccount account1 = new("Madmand", "dove", 696969);
-            account.AccountInfo();
-
+            Accounts.Add(account);
+            SaveAccount(account);
         }
 
-        
-
-        static void accountCreator()
-        {
-            Console.WriteLine("What is your first name?");
-            Console.Write(" > ");
-            string firstName = Console.ReadLine();
-
-            Console.WriteLine("What is your last name?");
-            Console.Write(" > ");
-            string lastName = Console.ReadLine();
-
-            Console.WriteLine("What is your initial deposit?");
-            Console.Write(" > ");
-            int deposit = int.Parse(Console.ReadLine());
-
-            CreateAccount account = new(firstName, lastName, deposit);
-            SaveAccount(account); // Save the newly created account to the JSON file
-
-        }
-
-
-        static void SaveAccount(CreateAccount account)
+        // Saves the account by serializing the 'CreateAccount' object to a JSON string, 
+        // writing it to the specified file, and then printing a success message. 
+        public void SaveAccount(CreateAccount account)
         {
             try
             {
-                string jsonString = JsonSerializer.Serialize(account);
+                string jsonString = JsonSerializer.Serialize(Accounts);
                 File.WriteAllText(Filepath, jsonString);
                 Console.WriteLine("Account saved successfully.");
             }
@@ -106,23 +86,151 @@ namespace PersonalFinanceTracker
             }
         }
 
-
-
-
-        static void LoadAccount()
+        // A method to load accounts from a file and deserialize them into a list of CreateAccount objects.
+        public void LoadAccounts()
         {
             try
             {
                 string jsonString = File.ReadAllText(Filepath);
-                CreateAccount account = JsonSerializer.Deserialize<CreateAccount>(jsonString);
-                Console.WriteLine($"Your first name is {account.FirstName}");
-                Console.WriteLine($"Your last name is {account.LastName}");
-                Console.WriteLine($"Your deposit is {account.Balance}");
+                List<CreateAccount> loadedAccounts = JsonSerializer.Deserialize<List<CreateAccount>>(jsonString);
+
+                if (loadedAccounts != null)
+                {
+                    Accounts.Clear(); // Clear the existing list
+                    Accounts.AddRange(loadedAccounts); // Add the loaded accounts
+                    foreach (var item in Accounts)
+                    {
+                        Console.WriteLine(item.FirstName);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"there where no accounts saved");
             }
         }
+    }
+
+    class AccountManager
+    {
+        private AccountDB AccountDb { get; }
+
+        // Constructor for creating an instance of AccountManager with the provided AccountDB object.
+        public AccountManager(AccountDB accountDb)
+        {
+            AccountDb = accountDb;
+        }
+
+        // A simple function that creates an account by prompting the user for their first name, last name, password, and initial deposit. It then creates an account object and adds it to the account database.
+        public void AccountCreator()
+        {
+            Console.WriteLine("What is your first name?");
+            Console.Write(" > ");
+            string firstName = Console.ReadLine();
+
+            Console.WriteLine("What is your last name?");
+            Console.Write(" > ");
+            string lastName = Console.ReadLine();
+
+            Console.WriteLine("What is your password?");
+            Console.Write(" > ");
+            string password = Console.ReadLine();
+
+            Console.WriteLine("What is your initial deposit?");
+            Console.Write(" > ");
+            int deposit = 0;
+            while (!int.TryParse(Console.ReadLine(), out deposit))
+            {
+                Console.WriteLine("Invalid input, please enter a number.");
+                Console.Write(" > ");
+            }
+
+            CreateAccount account = new(firstName, lastName, password, deposit);
+            AccountDb.AddAccount(account);
+        }
+    }
+
+
+
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            bool on = true;
+            Console.WriteLine("Hello, welcome to the Personal Finance Tracker.");
+            Console.WriteLine("In this program, you can track your income and expenses.\n\n\n");
+
+            AccountDB accountDB = new();
+            accountDB.LoadAccounts();
+            AccountManager accountManager = new(accountDB);
+
+            while (on)
+            {
+
+            Console.WriteLine("1. Create account");
+            Console.WriteLine("2. Login");
+            Console.WriteLine("3. exit");
+
+            int erg = int.Parse(Console.ReadLine());
+            switch (erg)
+            {
+                case 1:
+                    accountManager.AccountCreator();
+                    break;
+                
+                case 2:
+                    
+                    break;
+                
+                case 3:
+                    on = false;
+                    break;
+             
+                default:
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 3.");
+                    break;
+            }
+
+
+            }
+
+
+            Console.WriteLine("Thank you for using the Personal Finance Tracker. Goodbye!");
+        }
+
+
+        private static void Login()
+        {
+            AccountDB accountDB = new();
+            accountDB.LoadAccounts();
+            bool logedIn = false;
+            bool atempt = true;
+            while (atempt)
+            {
+                Console.Clear();
+                Console.WriteLine("write your ID");
+                
+                int id = int.Parse(Console.ReadLine());
+
+                foreach (var item in accountDB.Accounts)
+                {
+                    if (item.Id == id)
+                    {
+                        Console.WriteLine("write your password");
+                        if (item.Password == Console.ReadLine())
+                        {
+                            logedIn = true;
+                            atempt = false;   
+                        }
+
+                    }
+                }
+            }
+            while (logedIn)
+            {
+                
+            }
+        }
+
     }
 }
