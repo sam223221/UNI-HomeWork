@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -38,9 +39,9 @@ namespace PersonalFinanceTracker
 
         public void AccountInfo()
         {
-            Console.WriteLine($"Your first name is {FirstName}");
-            Console.WriteLine($"Your last name is {LastName}");
-            Console.WriteLine($"Your deposit is {Balance}");
+            Console.WriteLine($"Your first name is      : {FirstName}");
+            Console.WriteLine($"Your last name is       : {LastName}");
+            Console.WriteLine($"Your current balance is : {Balance}");
         }
 
         private static int IdGenerator()
@@ -172,23 +173,30 @@ namespace PersonalFinanceTracker
             Console.WriteLine("3. exit");
 
             int erg = int.Parse(Console.ReadLine());
-            switch (erg)
+
+            if (typeof(int) == erg.GetType())
             {
-                case 1:
-                    accountManager.AccountCreator();
-                    break;
-                
-                case 2:
+                switch (erg)
+                {
+                    case 1:
+                        accountManager.AccountCreator();
+                        break;
                     
-                    break;
+                    case 2:
+                        Login();
+                        break;
+                    
+                    case 3:
+                        on = false;
+                        break;
                 
-                case 3:
-                    on = false;
-                    break;
-             
-                default:
-                    Console.WriteLine("Invalid input. Please enter a number between 1 and 3.");
-                    break;
+                    default:
+                        Console.WriteLine("Invalid input. Please enter a number between 1 and 3.");
+                        break;
+                }
+            }else
+            {
+                Console.WriteLine("Invalid input. Please enter a number between 1 and 3.");
             }
 
 
@@ -209,8 +217,15 @@ namespace PersonalFinanceTracker
             {
                 Console.Clear();
                 Console.WriteLine("write your ID");
+                Console.WriteLine("or type 'Exit' to exit");
+                Console.Write(" > ");
+
+                string input = Console.ReadLine();
+
+                if (input == "Exit" || input == "exit") return;
                 
-                int id = int.Parse(Console.ReadLine());
+                
+                int id = int.TryParse(input, out id) ? id : 0;
 
                 foreach (var item in accountDB.Accounts)
                 {
@@ -220,16 +235,53 @@ namespace PersonalFinanceTracker
                         if (item.Password == Console.ReadLine())
                         {
                             logedIn = true;
-                            atempt = false;   
+                            atempt = false;
+                            Console.WriteLine("Login successful");
+                            LogedIn(item);
+                        }else
+                        {
+                            Console.WriteLine("wrong password");
+                            continue;
                         }
 
                     }
                 }
+                if(!logedIn)
+                {
+                Console.WriteLine("ID not found, try again");
+                Console.ReadKey();
+                }
             }
-            while (logedIn)
+        }
+        static void LogedIn(CreateAccount accountDB)
+        {
+            bool logOut = false;
+
+                Console.WriteLine($"hello welcome back {accountDB.FirstName} to the personal finance tracker");
+            while (!logOut)
             {
+                Console.WriteLine("1. Make a transaction");
+                Console.WriteLine("2. Account info");
+                Console.WriteLine("3. Log out");
                 
+                string input = Console.ReadLine();
+                switch (input)
+                {
+                    case "1":
+                        
+                        //CreateTransaction(accountDB);
+                        break;
+                    case "2":
+                        accountDB.AccountInfo();
+                        break;
+                    case "3":
+                        logOut = true;
+                        break;
+
+                }
+                Console.Clear();
             }
+
         }
 
     }
